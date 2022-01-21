@@ -12,7 +12,7 @@ app.use(express.static("public"));
 // Database 
 mongoose.connect("mongodb://localhost:27017/toDoListDB");
 
-const itemsSchema = new Schema ({
+const itemsSchema = new mongoose.Schema ({
   name: {
     required: [true, "A to-do item is required"],
     type: String
@@ -20,7 +20,6 @@ const itemsSchema = new Schema ({
 });
 
 const Item = mongoose.model("Item", itemsSchema);
-
 
 const item1 = new Item({
   name: "Welcome to your To-Do List!"
@@ -47,8 +46,7 @@ Item.insertMany(defaultItems, function(err){
 
 app.get("/", function(req, res) {
 
-const day = date.getDate();
-
+  const day = date.getDate();
   res.render("list", {listTitle: day, newListItems: items});
 
 });
