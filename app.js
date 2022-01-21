@@ -1,16 +1,24 @@
-
 const express = require("express");
+const mongoose = require("mongoose");
 const date = require(__dirname + "/date.js");
 
+
+//Application Middleware
 const app = express();
-
 app.set('view engine', 'ejs');
-
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-const items = ["Buy Food", "Cook Food", "Eat Food"];
-const workItems = [];
+mongoose.connect("mongodb://localhost:27017/toDoListDB");
+
+const itemsSchema = new Schema ({
+  name: {
+    required: [true, "A to-do item is required"],
+    type: String
+  }
+});
+
+const Item = mongoose.model("Item", itemsSchema);
 
 app.get("/", function(req, res) {
 
