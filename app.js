@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const date = require(__dirname + "/date.js");
 
 
-//Application Middleware
+// Application Middleware
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+// Database 
 mongoose.connect("mongodb://localhost:27017/toDoListDB");
 
 const itemsSchema = new Schema ({
@@ -19,6 +20,30 @@ const itemsSchema = new Schema ({
 });
 
 const Item = mongoose.model("Item", itemsSchema);
+
+
+const item1 = new Item({
+  name: "Welcome to your To-Do List!"
+});
+
+const item2 = new Item({
+  name: "Hit the + button to add a new item."
+});
+
+const item3 = new Item({
+  name: "<-- Hit this to delete an item."
+});
+
+const defaultItems = [item1, item2, item3];
+
+Item.insertMany(defaultItems, function(err){
+  if(err){
+    console.log(err);
+  } else{
+    console.log("Default Insert succesful");
+  }
+});
+
 
 app.get("/", function(req, res) {
 
