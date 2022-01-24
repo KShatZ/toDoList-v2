@@ -46,9 +46,18 @@ Item.insertMany(defaultItems, function(err){
 
 app.get("/", function(req, res) {
 
-  const day = date.getDate();
-  res.render("list", {listTitle: day, newListItems: items});
+  const day = date.getDate(); // Get day of week
 
+  Item.find({}, function(err,docs){ // Access DB and find all docs in Item model
+
+    if(err){
+      console.log(err);
+    } else{
+      res.render("list", {day: day, listItems: docs}); // Send over day of week and array of found items
+    }
+
+  });
+  
 });
 
 app.post("/", function(req, res){
