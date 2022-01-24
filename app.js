@@ -35,14 +35,6 @@ const item3 = new Item({
 
 const defaultItems = [item1, item2, item3];
 
-Item.insertMany(defaultItems, function(err){
-  if(err){
-    console.log(err);
-  } else{
-    console.log("Default Insert succesful");
-  }
-});
-
 
 app.get("/", function(req, res) {
 
@@ -50,12 +42,27 @@ app.get("/", function(req, res) {
 
   Item.find({}, function(err,docs){ // Access DB and find all docs in Item model
 
-    if(err){
+    if (err) {
       console.log(err);
-    } else{
-      res.render("list", {day: day, listItems: docs}); // Send over day of week and array of found items
-    }
+    } else {
 
+      if (docs.length == 0){ // Database is empty so need to add default items
+
+        console.log("To-Do List empty, need to add default items...");
+        Item.insertMany(defaultItems, function(err){
+          if (err) {
+            console.log(err);
+          } else{
+            console.log("Default items added succesfully");
+          }
+        });
+        
+        res.redirect("/");
+
+      } else { // DB not empty: render list view
+        res.render("list", {day: day, listItems: docs});
+      } 
+    }
   });
   
 });
