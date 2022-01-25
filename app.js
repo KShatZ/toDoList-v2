@@ -1,4 +1,6 @@
+const { response } = require("express");
 const express = require("express");
+const { redirect } = require("express/lib/response");
 const mongoose = require("mongoose");
 const date = require(__dirname + "/date.js");
 
@@ -18,8 +20,17 @@ const itemsSchema = new mongoose.Schema ({
     type: String
   }
 });
-
 const Item = mongoose.model("Item", itemsSchema);
+
+const listSchema = new mongoose.Schema ({
+  name: {
+    required: true,
+    type: String
+  },
+  items: [itemsSchema]
+});
+const List = mongoose.model("List", listSchema);
+
 
 const item1 = new Item({
   name: "Welcome to your To-Do List!"
@@ -60,12 +71,42 @@ app.get("/", function(req, res) {
         res.redirect("/");
 
       } else { // DB not empty: render list view
-        res.render("list", {day: day, listItems: docs});
+        res.render("list", {title: day, listItems: docs});
       } 
     }
   });
   
 });
+
+app.get("/:listTitle", function(req, res){
+
+  const listTitle = req.params.listTitle;
+
+  List.findOne({name: listTitle}, function (err, result){
+
+    if (!err){
+
+      if (!result){
+        //New List Needs to be Created
+        const list = new List({
+          name: listTitle,
+          items: defaultItems
+        });
+        list.save();
+        res.redirect("/" + listTitle);
+      }
+      else {
+        //List Needs to be Shown
+        res.render("list", {title: result.name, listItems: result.items});
+      }
+    } else {
+      console.log(err);
+    }
+
+  });
+  
+}); 
+
 
 app.post("/", function(req, res){
 
@@ -91,14 +132,6 @@ app.post("/delete", function(req, res){
   });
 
   res.redirect("/");
-});
-
-app.get("/work", function(req,res){
-  res.render("list", {listTitle: "Work List", newListItems: workItems});
-});
-
-app.get("/about", function(req, res){
-  res.render("about");
 });
 
 app.listen(3000, function() {
