@@ -1,7 +1,7 @@
 <%- include("header") -%>
 
   <div class="box" id="heading">
-    <h1> <%=  title %> </h1>
+    <h1> <%=title%> </h1>
   </div>
 
   <div class="box">
@@ -17,7 +17,7 @@
         
       <form class="item" action="/" method="post">
         <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-        <button type="submit" name="list">+</button>
+        <button type="submit" name="list" value="<%=title%>">+</button>
       </form>
   </div>
 

@@ -82,11 +82,11 @@ app.get("/:listTitle", function(req, res){
 
   const listTitle = req.params.listTitle;
 
-  List.findOne({name: listTitle}, function (err, result){
+  List.findOne({name: listTitle}, function (err, foundList){
 
     if (!err){
 
-      if (!result){
+      if (!foundList){
         //New List Needs to be Created
         const list = new List({
           name: listTitle,
@@ -97,7 +97,7 @@ app.get("/:listTitle", function(req, res){
       }
       else {
         //List Needs to be Shown
-        res.render("list", {title: result.name, listItems: result.items});
+        res.render("list", {title: foundList.name, listItems: foundList.items});
       }
     } else {
       console.log(err);
@@ -110,13 +110,37 @@ app.get("/:listTitle", function(req, res){
 
 app.post("/", function(req, res){
 
+  // POST Data
+  const listItem = req.body.newItem;
+  const listTitle = req.body.list;
+
   const item = new Item({
-    name: req.body.newItem
+    name: listItem
   });
 
-  item.save();
+  // Default List
+  if(listTitle == date.getDate()){
 
-  res.redirect("/");
+    item.save()
+    res.redirect("/");
+
+  } else { 
+
+    // Find specific list in DB and Push to the items array
+    List.findOne({name: listTitle}, function(err, foundList){
+
+      if (!err){
+        foundList.items.push(item);
+        foundList.save()
+        res.redirect("/" + listTitle);
+      } else {
+        console.log(err);
+      }
+
+    });
+  }
+
+ 
 });
 
 app.post("/delete", function(req, res){
