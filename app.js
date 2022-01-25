@@ -1,8 +1,8 @@
-const { response } = require("express");
 const express = require("express");
-const { redirect } = require("express/lib/response");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 const date = require(__dirname + "/date.js");
+
 
 
 // Application Middleware
@@ -80,7 +80,7 @@ app.get("/", function(req, res) {
 
 app.get("/:listTitle", function(req, res){
 
-  const listTitle = req.params.listTitle;
+  const listTitle = _.capitalize(req.params.listTitle);
 
   List.findOne({name: listTitle}, function (err, foundList){
 
@@ -139,8 +139,6 @@ app.post("/", function(req, res){
 
     });
   }
-
- 
 });
 
 app.post("/delete", function(req, res){
