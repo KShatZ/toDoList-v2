@@ -146,16 +146,30 @@ app.post("/", function(req, res){
 app.post("/delete", function(req, res){
   
   const itemID = req.body.itemCheckbox;
-  
-  Item.findByIdAndDelete(itemID, function(err){
-    if (err){
-      console.log(err);
-    } else {
-      console.log("Succesfully deleted item with id: " + itemID);
-    }
-  });
+  const listTitle = req.body.listTitle;
 
-  res.redirect("/");
+  // Default list
+  if (listTitle == date.getDate()){
+    Item.findByIdAndDelete(itemID, function(err){
+      if (!err){
+        console.log("Succesfully deleted item with id: " + itemID);
+        res.redirect("/");
+      } else {
+        console.log(err);
+      }
+    });
+  } else {
+
+      List.findOneAndUpdate({name: listTitle}, {$pull: {items: {_id: itemID}}}, function(err, foundList){
+
+          if(!err){
+            res.redirect("/" + listTitle);
+          } else {
+            console.log(err);
+          }
+      });
+  }
+
 });
 
 app.listen(3000, function() {
