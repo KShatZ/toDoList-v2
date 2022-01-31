@@ -91,22 +91,21 @@ app.get("/:listTitle", function(req, res){
     if (!err){
 
       if (!foundList){
-        //New List Needs to be Created
-        const list = new List({
-          name: listTitle,
-          items: defaultItems
-        });
-        list.save();
-        res.redirect("/" + listTitle);
+        // Need to add alert functionality
+        console.log("No such list exists... Create it first");
       }
       else {
-        //List Needs to be Shown
-        res.render("list", {title: foundList.name, listItems: foundList.items});
+        List.find({}, "name", function(err, lists){
+          if (!err){
+            res.render("list", {title: foundList.name, listItems: foundList.items, lists: lists})
+          } else {
+            console.log(err);
+          }
+        });
       }
     } else {
       console.log(err);
     }
-
   });
   
 }); 
