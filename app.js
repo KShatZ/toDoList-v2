@@ -45,17 +45,13 @@ const defaultItems = [item1, item2, item3];
 
 app.get("/", function(req, res) {
 
-  const day = date.getDate(); // Get day of week
+  const day = date.getDate(); // Current Day
 
   Item.find({}, function(err,docs){ // Access DB and find all docs in Item model
 
-    if (err) {
-      console.log(err);
-    } else {
-
+    if (!err) {
       if (docs.length == 0){ // Database is empty so need to add default items
-
-        console.log("To-Do List empty, need to add default items...");
+        
         Item.insertMany(defaultItems, function(err){
           if (err) {
             console.log(err);
@@ -63,15 +59,27 @@ app.get("/", function(req, res) {
             console.log("Default items added succesfully");
           }
         });
-        
         res.redirect("/");
 
       } else { // DB not empty: render list view
-        res.render("list", {title: day, listItems: docs});
+
+        List.find({}, "name", function(err, lists){
+
+          if (!err){
+            if (lists){ // Custom lists have been created
+              res.render("list", {title: day, listItems: docs, lists: lists});
+            }else { // No custom lists have been created yet
+              res.render("list", {title: day, listItems: docs, lists: null});
+            }
+          }else {
+            console.log(err);
+          }
+        });
       } 
+    } else {
+      console.log(err);
     }
   });
-  
 });
 
 app.get("/:listTitle", function(req, res){

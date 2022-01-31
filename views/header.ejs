@@ -35,8 +35,13 @@
               Lists
             </a>
             <div class="dropdown-menu">
-              <a href="/" class="dropdown-item">List 1</a>
-              <a href="/" class="dropdown-item">List 2</a>
+              <%if (!lists){%>
+                <a href="/" class="dropdown-item disabled">No custom lists</a>
+              <%} else{%>
+                <%lists.forEach(function(list){%>
+                  <a href="/" class="dropdown-item"><%= list.name %></a>
+                <%});%>
+              <%}%>
             </div>
           </div>
           <a href="/about" class="nav-link">About</a>
