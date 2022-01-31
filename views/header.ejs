@@ -39,7 +39,7 @@
                 <a href="/" class="dropdown-item disabled">No custom lists</a>
               <%} else{%>
                 <%lists.forEach(function(list){%>
-                  <a href="/" class="dropdown-item"><%= list.name %></a>
+                  <a href="/<%=list.name%>" class="dropdown-item"><%= list.name %></a>
                 <%});%>
               <%}%>
             </div>
