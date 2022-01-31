@@ -4,7 +4,6 @@ const _ = require("lodash");
 const date = require(__dirname + "/date.js");
 
 
-
 // Application Middleware
 const app = express();
 app.set('view engine', 'ejs');
@@ -31,19 +30,16 @@ const listSchema = new mongoose.Schema ({
 });
 const List = mongoose.model("List", listSchema);
 
-
+// List Starter Items
 const item1 = new Item({
   name: "Welcome to your To-Do List!"
 });
-
 const item2 = new Item({
   name: "Hit the + button to add a new item."
 });
-
 const item3 = new Item({
   name: "<-- Hit this to delete an item."
 });
-
 const defaultItems = [item1, item2, item3];
 
 
@@ -107,7 +103,9 @@ app.get("/:listTitle", function(req, res){
   
 }); 
 
+/* POST REQUESTS */
 
+// Adding new item to list
 app.post("/", function(req, res){
 
   // POST Data
@@ -141,6 +139,37 @@ app.post("/", function(req, res){
   }
 });
 
+// Creating new list
+app.post("/newList", function(req,res){
+
+  const listName = _.capitalize(req.body.newListName);
+
+  List.findOne({name: listName}, function(err, list){
+
+    if(!err){
+
+      if(list){
+        //Will need to edit this later where alert is sent that exists instead of redirecting to form
+        res.redirect("/" + listName);
+      } else{
+        
+        const newList = new List({
+          name: listName,
+          items: defaultItems
+        });
+        newList.save();
+        console.log("Created new list called: " + listName);
+
+        res.redirect("/" + listName);
+      }
+
+    } else{
+      console.log(err);
+    }
+  });
+});
+
+// Deleting item from list
 app.post("/delete", function(req, res){
   
   const itemID = req.body.itemCheckbox;
