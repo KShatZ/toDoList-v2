@@ -110,6 +110,19 @@ app.get("/list-:listTitle", function(req, res){
   
 }); 
 
+app.get("/about", function(req, res){
+
+  // List menu in navbar
+  List.find({}, "name", function(err, lists){
+    if (!err){
+      res.render("about", {lists: lists})
+    } else {
+      console.log(err);
+    }
+  });
+  
+});
+
 /* POST REQUESTS */
 
 // Adding new item to list
