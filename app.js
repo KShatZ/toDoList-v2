@@ -82,7 +82,7 @@ app.get("/", function(req, res) {
   });
 });
 
-app.get("/:listTitle", function(req, res){
+app.get("/list-:listTitle", function(req, res){
 
   const listTitle = _.capitalize(req.params.listTitle);
 
@@ -137,7 +137,7 @@ app.post("/", function(req, res){
       if (!err){
         foundList.items.push(item);
         foundList.save()
-        res.redirect("/" + listTitle);
+        res.redirect("/list-" + listTitle);
       } else {
         console.log(err);
       }
@@ -157,7 +157,7 @@ app.post("/newList", function(req,res){
 
       if(list){
         //Will need to edit this later where alert is sent that exists instead of redirecting to form
-        res.redirect("/" + listName);
+        res.redirect("/list-" + listName);
       } else{
         
         const newList = new List({
@@ -167,7 +167,7 @@ app.post("/newList", function(req,res){
         newList.save();
         console.log("Created new list called: " + listName);
 
-        res.redirect("/" + listName);
+        res.redirect("/list-" + listName);
       }
 
     } else{
@@ -197,7 +197,7 @@ app.post("/delete", function(req, res){
       List.findOneAndUpdate({name: listTitle}, {$pull: {items: {_id: itemID}}}, function(err, foundList){
 
           if(!err){
-            res.redirect("/" + listTitle);
+            res.redirect("/list-" + listTitle);
           } else {
             console.log(err);
           }
