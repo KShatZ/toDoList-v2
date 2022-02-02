@@ -166,27 +166,27 @@ app.post("/", function(req, res){
 app.post("/newList", function(req,res){
 
   const listName = _.capitalize(req.body.newListName);
-  const requestPage = req.body.newListButton;
-
 
   List.findOne({name: listName}, function(err, list){
 
     if(!err){
 
-      if(list){
-        
-        res.status(406).end(); // Error 406 - Unacceptable Input: list has been created already
-
-      } else{
-        
-        const newList = new List({
-          name: listName,
-          items: defaultItems
-        });
-        newList.save();
-        console.log("Created new list called: " + listName);
-
-        res.redirect("/list-" + listName);
+      if (listName.trim().length === 0) { // Input contains all spaces
+        res.status(400).end(); // Error 400 - Bad Request: Cant have a blank list name
+      }else {
+        if(list){
+          res.status(406).end(); // Error 406 - Unacceptable Input: list has been created already
+        } else{
+          
+          const newList = new List({
+            name: listName,
+            items: defaultItems
+          });
+          newList.save();
+          console.log("Created new list called: " + listName);
+  
+          res.redirect("/list-" + listName);
+        }
       }
 
     } else{

@@ -18,9 +18,20 @@ newListForm.addEventListener("submit", function(e){
         headers: {"Content-Type": "application/json"}
     })
     .then(function(response){
-        if(response.status == "406"){
-            alert(`You have already created a list with the name ${newListName}`);
+
+        console.log(response.status);
+
+        switch (response.status){
+
+            case 400:
+                alert(`Your list must have a name!`);
+                break;
+
+            case 406:
+                alert(`You have already created a list with the name ${newListName}`);
+                break;
         }
+    
     });
 
 });
