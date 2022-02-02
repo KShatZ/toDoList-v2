@@ -8,6 +8,7 @@ const date = require(__dirname + "/date.js");
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: true}));
+app.use(express.json([]));
 app.use(express.static("public"));
 
 // Database 
@@ -128,6 +129,8 @@ app.get("/about", function(req, res){
 // Adding new item to list
 app.post("/", function(req, res){
 
+  console.log(req.body);
+
   // POST Data
   const listItem = req.body.newItem;
   const listTitle = req.body.list;
@@ -163,14 +166,17 @@ app.post("/", function(req, res){
 app.post("/newList", function(req,res){
 
   const listName = _.capitalize(req.body.newListName);
+  const requestPage = req.body.newListButton;
+
 
   List.findOne({name: listName}, function(err, list){
 
     if(!err){
 
       if(list){
-        //Will need to edit this later where alert is sent that exists instead of redirecting to form
-        res.redirect("/list-" + listName);
+        
+        res.status(406).end(); // Error 406 - Unacceptable Input: list has been created already
+
       } else{
         
         const newList = new List({
@@ -186,7 +192,7 @@ app.post("/newList", function(req,res){
     } else{
       console.log(err);
     }
-  });
+  });  
 });
 
 // Deleting item from list

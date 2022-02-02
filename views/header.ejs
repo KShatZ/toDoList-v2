@@ -39,7 +39,7 @@
                 <a href="/" class="dropdown-item disabled">No custom lists</a>
               <%} else{%>
                 <%lists.forEach(function(list){%>
-                  <a href="/list-<%=list.name%>" class="dropdown-item"><%= list.name %></a>
+                    <a href="/list-<%=list.name%>" class="dropdown-item"><%= list.name %></a>
                 <%});%>
               <%}%>
             </div>
@@ -47,11 +47,11 @@
           <a href="/about" class="nav-link">About</a>
         </div>
 
-        <form class="d-flex" action="/newList" method="POST">
+        <form class="d-flex justify-content-center align-center" id="newListForm">
           <div class="form-group">
             <input class="form-control" type="text" name="newListName" placeholder="New List Name">
           </div>
-          <button type="submit">+</button>
+          <button type="submit" class="item-add-button btn-add-list" name="newListButton" value="<%=title%>">+</button>
         </form>
       </div>
     </div>
