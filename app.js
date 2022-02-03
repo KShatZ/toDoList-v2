@@ -129,7 +129,7 @@ app.get("/about", function(req, res){
 // Adding new item to list
 app.post("/", function(req, res){
 
-  console.log(req.body);
+  console.log(`The body is ${req.body}`);
 
   // POST Data
   const listItem = req.body.newItem;
@@ -166,6 +166,7 @@ app.post("/", function(req, res){
 app.post("/newList", function(req,res){
 
   const listName = _.capitalize(req.body.newListName);
+  console.log(listName);
 
   List.findOne({name: listName}, function(err, list){
 
@@ -185,7 +186,7 @@ app.post("/newList", function(req,res){
           newList.save();
           console.log("Created new list called: " + listName);
   
-          res.redirect("/list-" + listName);
+          res.send(`/list-${listName}`);
         }
       }
 
