@@ -171,12 +171,13 @@ app.post("/newList", function(req,res){
   List.findOne({name: listName}, function(err, list){
 
     if(!err){
-
-      if (listName.trim().length === 0) { // Input contains all spaces
-        res.status(400).end(); // Error 400 - Bad Request: Cant have a blank list name
+      if (listName.trim().length === 0) { 
+        // Error 400 - Bad Request: Cant have a blank list name
+        res.status(400).end();
       }else {
         if(list){
-          res.status(406).end(); // Error 406 - Unacceptable Input: list has been created already
+          // Error 406 - Unacceptable Input: list has been created already
+          res.status(406).end(); 
         } else{
           
           const newList = new List({
@@ -189,7 +190,6 @@ app.post("/newList", function(req,res){
           res.send(`/list-${listName}`);
         }
       }
-
     } else{
       console.log(err);
     }
