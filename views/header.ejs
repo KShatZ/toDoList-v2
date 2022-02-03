@@ -35,7 +35,7 @@
               Lists
             </a>
             <div class="dropdown-menu">
-              <%if (!lists){%>
+              <%if (lists.length == 0){%>
                 <a href="/" class="dropdown-item disabled">No custom lists</a>
               <%} else{%>
                 <%lists.forEach(function(list){%>
