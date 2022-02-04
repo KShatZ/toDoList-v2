@@ -86,19 +86,20 @@ app.get("/", function(req, res) {
 app.get("/list-:listTitle", function(req, res){
 
   const listTitle = _.capitalize(req.params.listTitle);
+  console.log("Recieved request to access a list: " + listTitle);
 
   List.findOne({name: listTitle}, function (err, foundList){
 
     if (!err){
 
       if (!foundList){
-        // Need to add alert functionality
-        // There is a bug here when the first list is created check what the issue is.... something with foundList
-        console.log("No such list exists... Create it first");
+        res.send(`<script>alert("The list '${listTitle}' does not exist. Create it first!"); window.location.href = "/"; </script>`);
       }
       else {
+        // console.log("The list: " + listTitle + " exists...");
         List.find({}, "name", function(err, lists){
           if (!err){
+            console.log("Serving list with name: " + listTitle);
             res.render("list", {title: foundList.name, listItems: foundList.items, lists: lists})
           } else {
             console.log(err);
@@ -165,6 +166,7 @@ app.post("/", function(req, res){
 app.post("/newList", function(req,res){
 
   const listName = _.capitalize(req.body.newListName);
+  // console.log("Recieved request to create new list: " + listName);
 
   if (listName.trim().length === 0) {
     // Error 400 - Bad Request: Cant have a blank list name
@@ -176,13 +178,13 @@ app.post("/newList", function(req,res){
           // Error 406 - Unacceptable Input: list has been created already
           res.status(406).end(); 
         }else { 
+          // console.log("No errors in new list request")
           const newList = new List({
             name: listName,
             items: defaultItems
           });
           newList.save();
-          console.log("Created new list called: " + listName);
-  
+          // console.log("Created new list called: " + listName);
           res.send(`/list-${listName}`);
         }
       } else{

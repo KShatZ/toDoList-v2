@@ -27,7 +27,7 @@ newListForm.addEventListener("submit", function(e){
                 break;
 
             case 406:
-                alert(`You have already created a list with the name ${newListName}`);
+                alert(`You have already created a list with the name '${newListName}'`);
                 redirect = false;
                 break;
 
