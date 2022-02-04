@@ -82,6 +82,10 @@ nav {
 
 /* Forms */
 
+.new-list-input {
+ border: 1px solid rgb(129, 133, 137, .3) !important;
+}
+
 .btn-add-list {
   height: 50px;
   width: 50px;
