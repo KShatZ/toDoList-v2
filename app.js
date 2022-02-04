@@ -93,6 +93,7 @@ app.get("/list-:listTitle", function(req, res){
 
       if (!foundList){
         // Need to add alert functionality
+        // There is a bug here when the first list is created check what the issue is.... something with foundList
         console.log("No such list exists... Create it first");
       }
       else {
@@ -129,8 +130,6 @@ app.get("/about", function(req, res){
 // Adding new item to list
 app.post("/", function(req, res){
 
-  console.log(`The body is ${req.body}`);
-
   // POST Data
   const listItem = req.body.newItem;
   const listTitle = req.body.list;
@@ -166,20 +165,17 @@ app.post("/", function(req, res){
 app.post("/newList", function(req,res){
 
   const listName = _.capitalize(req.body.newListName);
-  console.log(listName);
 
-  List.findOne({name: listName}, function(err, list){
-
-    if(!err){
-      if (listName.trim().length === 0) { 
-        // Error 400 - Bad Request: Cant have a blank list name
-        res.status(400).end();
-      }else {
+  if (listName.trim().length === 0) {
+    // Error 400 - Bad Request: Cant have a blank list name
+    res.status(400).end();
+  }else {
+    List.findOne({name: listName}, function(err, list){
+      if(!err){
         if(list){
           // Error 406 - Unacceptable Input: list has been created already
           res.status(406).end(); 
-        } else{
-          
+        }else { 
           const newList = new List({
             name: listName,
             items: defaultItems
@@ -189,11 +185,11 @@ app.post("/newList", function(req,res){
   
           res.send(`/list-${listName}`);
         }
+      } else{
+        console.log(err);
       }
-    } else{
-      console.log(err);
-    }
-  });  
+    }); 
+  } 
 });
 
 // Deleting item from list
