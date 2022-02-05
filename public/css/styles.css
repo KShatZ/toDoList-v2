@@ -25,6 +25,7 @@ nav {
 #heading {
   background-color: #A683E3;
   text-align: center;  
+  word-break: break-all;
 }
 
 .list-title-header {
