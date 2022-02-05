@@ -118,7 +118,7 @@ app.get("/about", function(req, res){
   // List menu in navbar
   List.find({}, "name", function(err, lists){
     if (!err){
-      res.render("about", {lists: lists})
+      res.render("about", {lists: lists, title: "/about"});
     } else {
       console.log(err);
     }
@@ -194,34 +194,52 @@ app.post("/newList", function(req,res){
   } 
 });
 
-// Deleting item from list
+// Deleting item or list
 app.post("/delete", function(req, res){
   
+  const currentLocation = req.body.currentLocation;
   const itemID = req.body.itemCheckbox;
-  const listTitle = req.body.listTitle;
-
-  // Default list
-  if (listTitle == date.getDate()){
-    Item.findByIdAndDelete(itemID, function(err){
-      if (!err){
-        console.log("Succesfully deleted item with id: " + itemID);
-        res.redirect("/");
-      } else {
-        console.log(err);
-      }
-    });
-  } else {
-
-      List.findOneAndUpdate({name: listTitle}, {$pull: {items: {_id: itemID}}}, function(err, foundList){
+  const listName = req.body.listName;
+  
+  // Delete item from list
+  if (itemID){
+    if (currentLocation == date.getDate()){ // Defualt List
+      Item.findByIdAndDelete(itemID, function(err){
+        if (!err){
+          console.log("Succesfully deleted item with id: " + itemID);
+          res.redirect("/");
+        } else {
+          console.log(err);
+        }
+      });
+    }else { // Custom List
+      List.findOneAndUpdate({name: currentLocation}, {$pull: {items: {_id: itemID}}}, function(err, foundList){
 
           if(!err){
-            res.redirect("/list-" + listTitle);
+            res.redirect("/list-" + currentLocation);
           } else {
             console.log(err);
           }
       });
-  }
+    }
+  }else { // Delete List
+    List.deleteOne({name: listName}, function(err){
 
+      if(!err){
+        if (listName === currentLocation){ // Request occured from deleted list
+          res.redirect("/");
+        }else if (currentLocation === "/about") {
+          res.redirect("/about");
+        }else if (currentLocation === date.getDate()) {
+          res.redirect("/");
+        } else {
+          res.redirect("/list-" + currentLocation);
+        }
+      }else {
+        console.log(err);
+      }
+    });
+  }
 });
 
 app.listen(3000, function() {

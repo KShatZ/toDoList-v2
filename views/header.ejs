@@ -39,8 +39,10 @@
                 <a href="/" class="dropdown-item disabled">No custom lists</a>
               <%} else{%>
                 <%lists.forEach(function(list){%>
-                  <form action="/deleteList" method="POST" class="d-flex align-items-center">
-                      <input type="image" src="img/remove.png" alt="Trach Can" class="trash" width="15" height="15"/>
+                  <form action="/delete" method="POST" class="d-flex align-items-center">
+                      <input class="trash" type="image" src="img/remove.png" alt="Delete list 'x'" width="15" height="15">
+                      <input type="hidden" name="listName" value="<%=list.name%>">
+                      <input type="hidden" name="currentLocation" value="<%=title%>">
                       <a href="/list-<%=list.name%>" class="dropdown-item"><%= list.name %></a>
                   </form>
                 <%});%>
