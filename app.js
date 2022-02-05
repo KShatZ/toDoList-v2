@@ -36,12 +36,21 @@ const item1 = new Item({
   name: "Welcome to your To-Do List!"
 });
 const item2 = new Item({
-  name: "Hit the + button to add a new item."
+  name: "Hit the + button below to add a new item."
 });
 const item3 = new Item({
   name: "<-- Hit this to delete an item."
 });
-const defaultItems = [item1, item2, item3];
+const item4 = new Item({
+  name: "Hit the + button in the navigation bar to create a custom list"
+});
+const item5 = new Item({
+  name: "View your custom lists in the 'Lists' dropdown"
+});
+const item6 = new Item({
+  name: "Delete a custom list by clicking the red 'x'"
+});
+const defaultItems = [item1, item2, item3, item4, item5, item6];
 
 
 app.get("/", function(req, res) {
